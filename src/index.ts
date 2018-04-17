@@ -9,3 +9,4 @@ const server = http.createServer(instance.callback());
 createSocketServer(server);
 
 server.listen(port);
+console.log(`server listening at port ${port}`);

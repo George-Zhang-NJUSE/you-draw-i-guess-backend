@@ -1,11 +1,10 @@
 import { User, Room } from './model';
+import { data } from './dataAccess';
 
 class App {
 
   onlineUsers: User[] = [];
   rooms: Room[] = [];
-
-  private nextUserId = 1;
 
   openNewRoom(roomName: string) {
     this.rooms.push({
@@ -24,6 +23,24 @@ class App {
     if (room) {
       room.players.push(user);
     }
+  }
+
+  leaveRoom(roomId: number, userId: number) {
+    const room = this.rooms.find(r => r.roomId === roomId);
+    if (room) {
+      this.deleteSingleIf(room.players, (u: User) => u.userId === userId);
+      if (room.players.length === 0) {
+        this.closeRoom(roomId);
+      }
+    }
+  }
+
+  getRoomPlayers(roomId: number) {
+    const room = this.rooms.find(r => r.roomId === roomId);
+    if (room) {
+      return room.players;
+    }
+    return null;
   }
 
   /**
@@ -50,7 +67,7 @@ class App {
   }
 
   private generateUserId() {
-    return this.nextUserId++;
+    return data.nextUserId++;
   }
 
   private generateRoomId() {
