@@ -1,6 +1,6 @@
 import { readFileSync, writeFile } from 'fs';
 import { promisify } from 'util';
-import { Data } from './model';
+import { Data } from '../model/constant';
 
 const fwrite = promisify(writeFile);
 const path = './res/data.json';

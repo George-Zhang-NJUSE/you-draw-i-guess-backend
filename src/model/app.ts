@@ -1,28 +1,35 @@
-import { User, Room } from './model';
-import { data } from './dataAccess';
+import { User, Room, ROOM_CAPACITY, ErrorMessage } from '../model/constant';
+import { data } from '../util/dataAccess';
 
 class App {
 
   onlineUsers: User[] = [];
   rooms: Room[] = [];
 
-  openNewRoom(roomName: string) {
-    this.rooms.push({
+  openNewRoom(roomName: string): Room {
+    const newRoom = {
       roomId: this.generateRoomId(),
       roomName,
       players: []
-    });
+    };
+    this.rooms.push(newRoom);
+    return newRoom;
   }
 
   closeRoom(roomId: number) {
     this.deleteSingleIf(this.rooms, (r: Room) => r.roomId === roomId);
   }
 
-  joinRoom(roomId: number, user: User) {
+  joinRoom(roomId: number, user: User): Room {
     const room = this.rooms.find(r => r.roomId === roomId);
-    if (room) {
-      room.players.push(user);
+    if (!room) {
+      throw ErrorMessage.ROOM_ALREADY_CLOSED;
     }
+    if (room.players.length === ROOM_CAPACITY) {
+      throw ErrorMessage.ROOM_PLAYERS_FULL;
+    }
+    room.players.push(user);
+    return room;
   }
 
   leaveRoom(roomId: number, userId: number) {
@@ -35,12 +42,12 @@ class App {
     }
   }
 
-  getRoomPlayers(roomId: number) {
+  getRoomPlayers(roomId: number): User[] {
     const room = this.rooms.find(r => r.roomId === roomId);
     if (room) {
       return room.players;
     }
-    return null;
+    return [];
   }
 
   /**
@@ -74,6 +81,9 @@ class App {
     let candidate = Math.round(Math.random() * 100000);
     while (this.rooms.find(r => r.roomId === candidate)) {
       candidate = Math.round(Math.random() * 100000);
+    }
+    if (candidate === 0) {
+      candidate++;
     }
     return candidate;
   }
