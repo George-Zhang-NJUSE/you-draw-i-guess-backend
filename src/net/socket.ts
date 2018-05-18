@@ -9,12 +9,16 @@ export function createSocketServer(server: Server) {
   const socketServer = socketIO(server);
 
   socketServer.on('connection', socket => {
-
+    // 一条socket对应一个user
     console.log(`socket ${socket.id} connected at ${Date()}`);
 
     configureRoomService(socket);
     configureUserService(socket);
     configureChatService(socket);
+
+    socket.on('disconnecting', () => {
+      console.log(`socket ${socket.id} disconnected at ${Date()}`);
+    });
 
   });
 

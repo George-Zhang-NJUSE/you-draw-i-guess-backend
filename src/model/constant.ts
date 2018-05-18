@@ -38,7 +38,7 @@ export type ClientEventPayload = {
 export type ServerEventPayload = {
   LOGIN: Partial<User>,
   OPEN_NEW_ROOM: string,
-  SELF_JOIN_ROOM: number,
+  SELF_JOIN_ROOM: never,
   SELF_LEAVE_ROOM: number,
   CHAT: string,
   GET_ROOM_PLAYERS: number,

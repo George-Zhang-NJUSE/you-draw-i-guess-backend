@@ -62,7 +62,10 @@ class App {
     return user as User;
   }
 
-  logout(userId: number) {
+  logout(userId: number, roomId: number = 0) {
+    if (roomId) {
+      this.leaveRoom(roomId, userId);
+    }
     this.deleteSingleIf(this.onlineUsers, (u: User) => u.userId === userId);
   }
 

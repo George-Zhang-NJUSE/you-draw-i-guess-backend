@@ -1,23 +1,24 @@
 import { ServerEvent, User, ClientEvent, ServerEventPayload } from '../model/constant';
 import { app } from '../model/app';
 
-const socketUserKey = Symbol('user');
+const userKey = Symbol('user');
 
 export function getAttachedUser(socket: SocketIO.Socket): User | undefined {
-  return socket[socketUserKey];
+  return socket[userKey];
 }
 
 export function configureUserService(socket: SocketIO.Socket) {
 
   socket.on(ServerEvent.LOGIN, (user: ServerEventPayload['LOGIN']) => {
-    socket[socketUserKey] = app.login(user);
-    socket.emit(ClientEvent.LOGIN, socket[socketUserKey] as User);
+    socket[userKey] = app.login(user);
+    socket.emit(ClientEvent.LOGIN, socket[userKey] as User);
   });
 
   socket.on('disconnecting', () => {
-    socket.broadcast.emit(ClientEvent.OTHER_LEAVE_ROOM, socket[socketUserKey] as User);
-    app.logout((socket[socketUserKey] as User).userId);
-    console.log(`socket ${socket.id} disconnected at ${Date()}`);
+    const user = getAttachedUser(socket);
+    if (user) {
+      app.logout(user.userId);
+    }
   });
   
 }
