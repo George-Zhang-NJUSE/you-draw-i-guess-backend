@@ -47,7 +47,8 @@ export type ServerEventPayload = {
 
 export const ErrorMessage = {
   ROOM_ALREADY_CLOSED: '房间已关闭',
-  ROOM_PLAYERS_FULL: '房间人数已满'
+  ROOM_PLAYERS_FULL: '房间人数已满',
+  NOT_IN_A_ROOM: '不在房间里'
 };
 
 export const ROOM_CAPACITY = 10; // 单个房间最大人数

@@ -1,6 +1,6 @@
 import * as Koa from 'koa';
 import * as http from 'http';
-import { createSocketServer } from './service/socket';
+import { createSocketServer } from './net/socket';
 
 const port = process.env.PORT || 8080;
 
